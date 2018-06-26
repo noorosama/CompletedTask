@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-class ListViewController: UIViewController, UITableViewDelegate{
+class ListViewController: UIViewController, UITableViewDelegate {
     
     //MARK: Outlets
     @IBOutlet weak var listTableView: UITableView!
     
     //MARK: Variables
     var itemsPassed: [LocationItem] = []
-    var selecedCityCountry : LocationItem? = nil
+    var selectedItemComplitionHandlerrr: ((IndexPath) -> Void)?
     
     //MARK: View LifeCycle
     override func viewDidLoad() {
@@ -35,21 +35,38 @@ extension ListViewController {
         let cityCountryXib = UINib(nibName: "TableCityCountryViewCell", bundle: nil)
         listTableView.register(cityCountryXib, forCellReuseIdentifier: "CityCountryCell")
     }
+   
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        itemsPassed.forEach({ $0.checked = false })
+
+        let selecedCityCountry = itemsPassed[indexPath.row]
+
+        selecedCityCountry.toggelChecked()
+
+        tableView.reloadData()
+        
+       selectedItemComplitionHandlerrr?(indexPath)
+        
+        navigationController?.popViewController(animated: true)
+        
+    }
+   
+
+    func configureCheckmark(for cell:UITableViewCell, with item: LocationItem) {
+        
+        
+        if item.checked {
+            cell.accessoryType = .checkmark
+        }else{
+            cell.accessoryType = .none
+        }
+        
+    }
     
 }
-////MARK: - UITableViewDelegate
-//extension ListViewController: UITableViewDelegate {
-//    
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        
-//        selecedCityCountry = itemsPassed[indexPath.row]
-//        
-//        self.performSegue(withIdentifier: "DetailesSegue", sender: nil)
-//        
-//        view.endEditing(true)
-//        
-//    }
-//}
 
 //MARK: - UITableViewDataSource
 extension ListViewController: UITableViewDataSource {
@@ -66,6 +83,8 @@ extension ListViewController: UITableViewDataSource {
         let item = itemsPassed[indexPath.row]
         
         cell.CityCountryLabel.text = item.text
+        
+        configureCheckmark(for: cell, with: item)
         
         return cell
     }

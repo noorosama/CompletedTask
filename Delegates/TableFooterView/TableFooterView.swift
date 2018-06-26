@@ -11,29 +11,29 @@ import  UIKit
 
 class TableFooterView: UITableViewHeaderFooterView {
     
-    @IBOutlet private weak var submitButton: UIButton!
+    //MARK: Variables
     
-    var complitionHandler: (()-> Void)?
+    var submitComplitionHandler: (() -> Void)?
     
-    @IBAction func submitButtonTouch(_ sender: Any) {
+    //MARK: Outlets
+    
+    @IBOutlet  weak var submitButton: UIButton!
+    
+    @IBAction func submitDidTap(_ sender: Any) {
         
-        print("nooor")
-        
-        complitionHandler?()
-        
-       
-        
+        submitComplitionHandler!()
     }
     
-    
+   
 }
 
-//MARK: - Helper Method
+//MARK: - Helper Methods
 extension TableFooterView {
     
     func displayButtonName(text: String) {
         
        submitButton.setTitle(text,for: .normal)
+        
         
     }
 }

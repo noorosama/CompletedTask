@@ -30,7 +30,7 @@
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                             <connections>
-                                <action selector="submitButtonTouch:" destination="iN0-l3-epB" eventType="touchUpInside" id="meD-5r-5QC"/>
+                                <action selector="submitDidTap:" destination="iN0-l3-epB" eventType="touchUpInside" id="Fyy-ZR-AfK"/>
                             </connections>
                         </button>
                     </subviews>

@@ -13,18 +13,22 @@ class ViewController: UIViewController {
     var countryItems: [LocationItem] = []
     var cityItems: [LocationItem] = []
     var locationItems: [LocationItem] = []
-    var selecedLocation : LocationItem? = nil
+    
+    var selectedItem: LocationItem?
+
+    var selectedIndexPath: IndexPath?
+    
+    var locationData = LocationData()
     
     //MARK: Outlets
     @IBOutlet private weak var tableView: UITableView!
     
+    
     //MARK: Initializer
     required init?(coder aDecoder: NSCoder) {
-        // NSCoder to save data to disc and read it back again
         
         countryItems = [LocationItem]()
         cityItems = [LocationItem]()
-        // Create obj to use proprities
         
         let country0Item = LocationItem()
         country0Item.text = "country0"
@@ -92,11 +96,12 @@ class ViewController: UIViewController {
         
         super.init(coder: aDecoder)
     }
-    
+
     //MARK: View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
+       
     }
 }
 
@@ -118,15 +123,14 @@ private extension ViewController {
         
         let locationFooterXib = UINib(nibName: "TableFooterView", bundle: nil)
         tableView.register(locationFooterXib, forHeaderFooterViewReuseIdentifier: "TableFooterView")
-        
     }
 }
 
 //MARK: - UITableViewDataSource
+
 extension ViewController: UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return 2
     }
     
@@ -136,44 +140,55 @@ extension ViewController: UITableViewDataSource  {
         
         cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         
-        
-        cell.complitionHandlerr = {
+        let storyboard = UIStoryboard(name: "ListViewController", bundle: nil)
+        let listViewController = storyboard.instantiateViewController(withIdentifier: "ListViewController") as! ListViewController
+       
+        cell.textFieldComplitionHandlerr = { textField in
             
-            print("noor2")
-            
-            let storyboard = UIStoryboard(name: "listViewController", bundle: nil)
-            
-            let listViewController = storyboard.instantiateViewController(withIdentifier: "ListViewController") as! ListViewController
+            let point = textField.convert(textField.bounds.origin, to: tableView)
+            let textFieldIndexPath = tableView.indexPathForRow(at: point)
+            self.selectedIndexPath = textFieldIndexPath
             
             if indexPath.row == 0 {
-                
                 self.locationItems = self.countryItems
-                
             }else {
-                
                 self.locationItems = self.cityItems
-               
             }
-            
-    
             listViewController.itemsPassed = self.locationItems
             
             self.view.endEditing(true)
+            
             self.navigationController?.pushViewController(listViewController, animated: true)
-            
-            print("noor2")
-            
-           
         }
         
+        listViewController.selectedItemComplitionHandlerrr = { indexPath in
+            
+            self.selectedItem = self.locationItems[indexPath.row]
+            
+            if self.selectedIndexPath?.row == 0 {
+                self.locationData.countryItem = (self.selectedItem?.text)!
+            } else {
+                self.locationData.cityItem = (self.selectedItem?.text)!
+            }
+          
+            tableView.reloadData()
+        }
+        
+        if let selectedIndexx = selectedIndexPath {
+            if selectedIndexx.row == indexPath.row {
+                cell.displayTextField(text: selectedItem?.text ?? "")
+            }
+        }
+       
         return cell
     }
     
 }
 
 //MARK: - UITableViewDelegate
+
 extension ViewController: UITableViewDelegate {
-    
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "TableHeaderView") as! TableHeaderView
@@ -188,24 +203,37 @@ extension ViewController: UITableViewDelegate {
         return 50
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        
-        
-        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "TableFooterView") as! TableFooterView
+func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    
+       let storyboard = UIStoryboard(name: "SummaryViewController", bundle: nil)
+       let summaryViewController = storyboard.instantiateViewController(withIdentifier: "SummaryViewController") as! SummaryViewController
+    
+    
+       let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "TableFooterView") as! TableFooterView
         
         footerView.displayButtonName(text: "Submit")
-        
-        footerView.complitionHandler = {
-            print("noooor")
-            let storyboard = UIStoryboard(name: "listViewController", bundle: nil)
-            let listViewController = storyboard.instantiateViewController(withIdentifier: "ListViewController") as! ListViewController
-            listViewController.itemsPassed = self.countryItems
+       
+        footerView.submitComplitionHandler = {
             
-            self.navigationController?.pushViewController(listViewController, animated: true)
+        if self.locationData.countryItem.isEmpty || self.locationData.cityItem.isEmpty {
+               
+        self.showAlert(message: "All Fields Required", handler: nil)
+                    
+        } else {
+            
+        self.showAlert(message: "The location has been submitted successfully", handler: {
+            
+            summaryViewController.descriptionCountry = self.locationData.countryItem
+            summaryViewController.descriptionCity = self.locationData.cityItem
+            
+         self.navigationController?.pushViewController(summaryViewController, animated: true)
+            
+            })
+            
         }
+    }
         
         return footerView
-        
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -213,3 +241,24 @@ extension ViewController: UITableViewDelegate {
     }
     
 }
+    //MARK: - Helper Methods
+    
+    extension ViewController {
+    
+    func showAlert(message: String, handler:  (() -> Void)? ) {
+       
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "OK", style: .default, handler: { _ in
+            handler?()
+        })
+        
+        alert.addAction(action)
+       
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+}
+    
+

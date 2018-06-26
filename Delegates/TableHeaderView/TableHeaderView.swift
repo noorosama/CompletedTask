@@ -9,8 +9,11 @@
 import UIKit
 
 class TableHeaderView: UITableViewHeaderFooterView {
+    
+   //MARK: Outlets
 
     @IBOutlet private weak var headerLabel: UILabel!
+    
     
 }
 

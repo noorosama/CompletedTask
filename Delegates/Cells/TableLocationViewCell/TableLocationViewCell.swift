@@ -7,22 +7,40 @@
 
 
 import UIKit
+import Foundation
 
 class TableLocationViewCell: UITableViewCell, UITextFieldDelegate {
     
-    var complitionHandlerr: (() -> Void)?
+    //MARK: Variables
     
+    var textFieldComplitionHandlerr: ((UITextField) -> Void)?
+    
+    //MARK: Outlets
     
     @IBOutlet weak var textField: UITextField!
         {
         didSet {
+        
             textField.delegate = self
+            
         }
-    }
-    
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        complitionHandlerr?()
     }
   
 }
+
+//MARK: - Helper Methods
+
+extension TableLocationViewCell {
+    
+    func displayTextField(text: String) {
+       textField.text = text
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        
+        textFieldComplitionHandlerr?(textField)
+        return false
+    }
+}
+
+

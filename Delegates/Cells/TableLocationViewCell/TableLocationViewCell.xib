@@ -19,12 +19,13 @@
                 <rect key="frame" x="0.0" y="0.0" width="355" height="63.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IvM-5l-uDL">
+                    <textField opaque="NO" tag="1000" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IvM-5l-uDL">
                         <rect key="frame" x="5" y="18" width="346" height="30"/>
                         <nil key="textColor"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <textInputTraits key="textInputTraits"/>
                         <connections>
+                            <action selector="showAlert:" destination="KGk-i7-Jjw" eventType="editingDidEnd" id="HJX-VP-Pri"/>
                             <action selector="textFieldTouch:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="tqk-kr-wwW"/>
                         </connections>
                     </textField>
