@@ -8,7 +8,7 @@
 
 import Foundation
 
-class LocationData  {
+class LocationData {
     
     //MARK: Variables
     

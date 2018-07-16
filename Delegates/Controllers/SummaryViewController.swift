@@ -15,8 +15,8 @@ class SummaryViewController: UIViewController {
     @IBOutlet weak var summaryTableView: UITableView!
     
     //MARK: Variables
-    var descriptionCountry: String = ""
-    var descriptionCity: String = ""
+    var descriptionCountry: String?
+    var descriptionCity: String?
     
     //MARK: View LifeCycle
     override func viewDidLoad() {
@@ -32,26 +32,23 @@ class SummaryViewController: UIViewController {
     
     func configurSummaryTableView() {
         
-    summaryTableView.dataSource = self
-    summaryTableView.delegate = self
+    let summaryXib = UINib(nibName: Constants.NibName.summaryCell, bundle: nil)
+    summaryTableView.register(summaryXib, forCellReuseIdentifier: Constants.Identifier.summaryCell)
         
-    let summaryXib = UINib(nibName: "SummaryTableViewCell", bundle: nil)
-    summaryTableView.register(summaryXib, forCellReuseIdentifier: "SummaryCell")
-        
-    let summaryHeaderXib = UINib(nibName: "TableHeaderView", bundle: nil)
-    summaryTableView.register(summaryHeaderXib, forHeaderFooterViewReuseIdentifier: "TableHeaderView")
+    let summaryHeaderXib = UINib(nibName: Constants.NibName.header, bundle: nil)
+    summaryTableView.register(summaryHeaderXib, forHeaderFooterViewReuseIdentifier: Constants.Identifier.header)
         
     }
-    
 }
+
 //MARK: - UITableViewDelegate
 extension SummaryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let summaryHeaderView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "TableHeaderView") as! TableHeaderView
+        let summaryHeaderView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.header) as! TableHeaderView
         
-        summaryHeaderView.displayHeader(text: "Summary")
+        summaryHeaderView.displayHeader(text: LocalizationKeys.Headers.summary.localized)
         
         return summaryHeaderView
         
@@ -79,15 +76,15 @@ extension SummaryViewController: UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SummaryCell", for: indexPath) as! SummaryTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.Identifier.summaryCell, for: indexPath) as! SummaryTableViewCell
         
         if indexPath.row == 0 {
            
-            cell.displayLabel(text: "Country")
-            cell.displayDescription(text: descriptionCountry)
+            cell.displayLabel(text: LocalizationKeys.labels.country.localized)
+            cell.displayDescription(text: descriptionCountry!)
         } else {
-            cell.displayLabel(text: "City")
-            cell.displayDescription(text: descriptionCity)
+            cell.displayLabel(text: LocalizationKeys.labels.city.localized)
+            cell.displayDescription(text: descriptionCity!)
         }
         
         return cell

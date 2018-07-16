@@ -8,19 +8,31 @@
 import UIKit
 
 class ViewController: UIViewController {
+   
     
     //MARK: Variables
+    
     var countryItems: [LocationItem] = []
     var cityItems: [LocationItem] = []
     var locationItems: [LocationItem] = []
     
     var selectedItem: LocationItem?
-
+    
     var selectedIndexPath: IndexPath?
     
     var locationData = LocationData()
     
+    //MARK: Constants
+    
+    let fields: [FormField] = [
+       .city,
+       .country,
+       .email,
+       .date
+    ]
+    
     //MARK: Outlets
+    
     @IBOutlet private weak var tableView: UITableView!
     
     
@@ -61,7 +73,7 @@ class ViewController: UIViewController {
         let country7Item = LocationItem()
         country7Item.text = "country7"
         countryItems.append(country7Item)
- //---------------------------------------------
+        //---------------------------------------------
         let city0Item = LocationItem()
         city0Item.text = "city0"
         cityItems.append(city0Item)
@@ -96,12 +108,15 @@ class ViewController: UIViewController {
         
         super.init(coder: aDecoder)
     }
-
+    
     //MARK: View LifeCycle
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
-        configureTableView()
        
+        configureTableView()
+        
     }
 }
 
@@ -111,18 +126,57 @@ private extension ViewController {
     
     func configureTableView() {
         
-        tableView.dataSource = self
-        tableView.delegate = self
+        let locationXib = UINib(nibName: Constants.NibName.mainCell, bundle: nil)
+        tableView.register(locationXib, forCellReuseIdentifier: Constants.Identifier.mainCell)
         
+        let locationHeaderXib = UINib(nibName: Constants.NibName.header, bundle: nil)
+        tableView.register(locationHeaderXib, forHeaderFooterViewReuseIdentifier: Constants.Identifier.header)
         
-        let locationXib = UINib(nibName: "TableLocationViewCell", bundle: nil)
-        tableView.register(locationXib, forCellReuseIdentifier: "LocationCell")
+        let locationFooterXib = UINib(nibName: Constants.NibName.footer, bundle: nil)
+        tableView.register(locationFooterXib, forHeaderFooterViewReuseIdentifier: Constants.Identifier.footer)
+    }
+}
+
+//MARK: - Actions
+private extension ViewController {
+    
+    func itemTextFieldTapped(_ textField: UITextField, at indexPath: IndexPath) {
         
-        let locationHeaderXib = UINib(nibName: "TableHeaderView", bundle: nil)
-        tableView.register(locationHeaderXib, forHeaderFooterViewReuseIdentifier: "TableHeaderView")
+        let point = textField.convert(textField.bounds.origin, to: tableView)
+        let textFieldIndexPath = tableView.indexPathForRow(at: point)
+        self.selectedIndexPath = textFieldIndexPath
         
-        let locationFooterXib = UINib(nibName: "TableFooterView", bundle: nil)
-        tableView.register(locationFooterXib, forHeaderFooterViewReuseIdentifier: "TableFooterView")
+        let storyboard = UIStoryboard(name: Constants.StoryboardName.list, bundle: nil)
+        let listViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.list) as! ListViewController
+        
+        if indexPath.row == 0 {
+            self.locationItems = self.countryItems
+        }else {
+            self.locationItems = self.cityItems
+        }
+        listViewController.itemsPassed = self.locationItems
+        
+        self.view.endEditing(true)
+        
+        self.navigationController?.pushViewController(listViewController, animated: true)
+        
+        listViewController.selectedItemComplitionHandlerrr = { indexPath in
+            self.didSelectItem(at: indexPath)
+        }
+        
+    }
+    
+    func didSelectItem(at indexPath: IndexPath) {
+        
+        self.selectedItem = self.locationItems[indexPath.row]
+        
+        if self.selectedIndexPath?.row == 0 {
+           self.locationData.countryItem = (self.selectedItem?.text)!
+        } else {
+           self.locationData.cityItem = (self.selectedItem?.text)!
+        }
+        
+        tableView.reloadData()
     }
 }
 
@@ -131,55 +185,28 @@ private extension ViewController {
 extension ViewController: UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "LocationCell", for: indexPath) as! TableLocationViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.Identifier.mainCell, for: indexPath) as! TableLocationViewCell
         
-        cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+        let field = fields[indexPath.row]
         
-        let storyboard = UIStoryboard(name: "ListViewController", bundle: nil)
-        let listViewController = storyboard.instantiateViewController(withIdentifier: "ListViewController") as! ListViewController
-       
         cell.textFieldComplitionHandlerr = { textField in
-            
-            let point = textField.convert(textField.bounds.origin, to: tableView)
-            let textFieldIndexPath = tableView.indexPathForRow(at: point)
-            self.selectedIndexPath = textFieldIndexPath
-            
-            if indexPath.row == 0 {
-                self.locationItems = self.countryItems
-            }else {
-                self.locationItems = self.cityItems
-            }
-            listViewController.itemsPassed = self.locationItems
-            
-            self.view.endEditing(true)
-            
-            self.navigationController?.pushViewController(listViewController, animated: true)
-        }
-        
-        listViewController.selectedItemComplitionHandlerrr = { indexPath in
-            
-            self.selectedItem = self.locationItems[indexPath.row]
-            
-            if self.selectedIndexPath?.row == 0 {
-                self.locationData.countryItem = (self.selectedItem?.text)!
-            } else {
-                self.locationData.cityItem = (self.selectedItem?.text)!
-            }
-          
-            tableView.reloadData()
+            self.itemTextFieldTapped(textField, at: indexPath)
         }
         
         if let selectedIndexx = selectedIndexPath {
             if selectedIndexx.row == indexPath.row {
                 cell.displayTextField(text: selectedItem?.text ?? "")
+                cell.displayTextFieldPlaceholder(placeholder: field.placeholder)
+                cell.setKeyboardType(keyboardType: field.keyboardType!)
             }
         }
-       
+        
         return cell
     }
     
@@ -188,12 +215,12 @@ extension ViewController: UITableViewDataSource  {
 //MARK: - UITableViewDelegate
 
 extension ViewController: UITableViewDelegate {
-
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "TableHeaderView") as! TableHeaderView
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.header) as! TableHeaderView
         
-        headerView.displayHeader(text: "Location")
+        headerView.displayHeader(text: LocalizationKeys.Headers.main.localized)
         
         return headerView
         
@@ -203,35 +230,35 @@ extension ViewController: UITableViewDelegate {
         return 50
     }
     
-func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-    
-       let storyboard = UIStoryboard(name: "SummaryViewController", bundle: nil)
-       let summaryViewController = storyboard.instantiateViewController(withIdentifier: "SummaryViewController") as! SummaryViewController
-    
-    
-       let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "TableFooterView") as! TableFooterView
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         
-        footerView.displayButtonName(text: "Submit")
-       
+        let storyboard = UIStoryboard(name: Constants.StoryboardName.summary, bundle: nil)
+        let summaryViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.summary) as! SummaryViewController
+        
+        
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.footer) as! TableFooterView
+
+        footerView.displayButtonName(text: LocalizationKeys.ButtonNames.submitButton.localized)
+        
         footerView.submitComplitionHandler = {
             
-        if self.locationData.countryItem.isEmpty || self.locationData.cityItem.isEmpty {
-               
-        self.showAlert(message: "All Fields Required", handler: nil)
+            if self.locationData.countryItem.isEmpty || self.locationData.cityItem.isEmpty {
+                
+                self.showAlert(message: LocalizationKeys.Messages.emptyFieldMessage.localized, handler: nil)
+                
+            } else {
+                
+                self.showAlert(message: LocalizationKeys.Messages.successMessage.localized, handler: {
                     
-        } else {
-            
-        self.showAlert(message: "The location has been submitted successfully", handler: {
-            
-            summaryViewController.descriptionCountry = self.locationData.countryItem
-            summaryViewController.descriptionCity = self.locationData.cityItem
-            
-         self.navigationController?.pushViewController(summaryViewController, animated: true)
-            
-            })
-            
+                    summaryViewController.descriptionCountry = self.locationData.countryItem
+                    summaryViewController.descriptionCity = self.locationData.cityItem
+                    
+                    self.navigationController?.pushViewController(summaryViewController, animated: true)
+                    
+                })
+                
+            }
         }
-    }
         
         return footerView
     }
@@ -241,24 +268,4 @@ func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) ->
     }
     
 }
-    //MARK: - Helper Methods
-    
-    extension ViewController {
-    
-    func showAlert(message: String, handler:  (() -> Void)? ) {
-       
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .default, handler: { _ in
-            handler?()
-        })
-        
-        alert.addAction(action)
-       
-        self.present(alert, animated: true, completion: nil)
-        
-    }
-    
-}
-    
 

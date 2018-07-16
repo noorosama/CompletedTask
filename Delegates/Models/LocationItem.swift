@@ -8,17 +8,17 @@
 
 import Foundation
 
-class LocationItem  {
+class LocationItem {
     
     //MARK: Variables
     var text = ""
-    var checked = false
+    var isChecked = false
 }
 
 //MARK: - Helper Methods
-extension LocationItem  {
+extension LocationItem {
+    
     func toggelChecked() {
-        
-        checked = !checked
+        isChecked = !isChecked
     }
 }

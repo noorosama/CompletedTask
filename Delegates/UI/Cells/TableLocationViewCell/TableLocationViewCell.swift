@@ -19,6 +19,7 @@ class TableLocationViewCell: UITableViewCell, UITextFieldDelegate {
     
     @IBOutlet weak var textField: UITextField!
         {
+        
         didSet {
         
             textField.delegate = self
@@ -34,6 +35,14 @@ extension TableLocationViewCell {
     
     func displayTextField(text: String) {
        textField.text = text
+    }
+    
+    func displayTextFieldPlaceholder(placeholder: String) {
+        textField.placeholder = placeholder
+    }
+    
+    func setKeyboardType(keyboardType: UIKeyboardType) {
+        textField.keyboardType = keyboardType
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {

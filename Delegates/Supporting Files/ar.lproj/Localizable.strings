@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  Delegates
+
+  Created by SajaHammad on 7/2/18.
+  Copyright © 2018 Nour Abukhaled. All rights reserved.
+*/
+//MARK: Buttons
+"Buttons.Submit" = "ارسال";
+"Buttons.OK" = "موافق";
+//MARK: Messages
+"Messages.Empty" = "جميع الحقول اجباريه";
+"Messages.Success" = "تم ارسال الموقع بنجاح";
+//MARK: Headers
+"Headers.Summary" = "مراجعه";
+"Headers.Location" = "الموقع";
+//MARK: Titles
+"Titles.Country" = "البلده";
+"Titles.City" = "المدينه";
+

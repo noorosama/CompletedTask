@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  Delegates
+
+  Created by Nour Abukhaled on 7/2/18.
+  Copyright © 2018 Nour Abukhaled. All rights reserved.
+*/
+//MARK: Buttons
+"Buttons.Submit" = "Submit";
+"Buttons.OK" = "OK";
+//MARK: Messages
+"Messages.Empty" = "All Fields Required";
+"Messages.Success" = "The location has been submitted successfully";
+//MARK: Headers
+"Headers.Summary" = "Summary";
+"Headers.Location" = "Location";
+//MARK: Titles
+"Titles.Country" = "country";
+"Titles.City" = "city";
+
