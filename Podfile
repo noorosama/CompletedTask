@@ -7,5 +7,6 @@ target 'Delegates' do
 
   # Pods for Delegates
 pod 'Alamofire', '~> 4.2.0'
+pod 'IQKeyboardManagerSwift', '5.0.0'
 
 end

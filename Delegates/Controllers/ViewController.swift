@@ -197,6 +197,7 @@ private extension ViewController {
         let field = fields[indexPath.row]
         
         if field == .country {
+            
             navigateToListVC()
         }
         
@@ -279,6 +280,8 @@ extension ViewController: UITableViewDataSource  {
 
 extension ViewController: UITableViewDelegate {
     
+  
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.header) as! TableHeaderView
@@ -306,20 +309,20 @@ extension ViewController: UITableViewDelegate {
         footerView.submitComplitionHandler = {
             
             if self.locationData.countryItem.isEmpty || self.locationData.cityItem.isEmpty {
-                
+
                 self.showAlert(message: LocalizationKeys.Messages.emptyFieldMessage.localized, handler: nil)
-                
+
             } else {
-                
+            
                 self.showAlert(message: LocalizationKeys.Messages.successMessage.localized, handler: {
-                    
+
                     summaryViewController.descriptionCountry = self.locationData.countryItem
                     summaryViewController.descriptionCity = self.locationData.cityItem
-                    
+
                     self.navigationController?.pushViewController(summaryViewController, animated: true)
-                    
+
                 })
-                
+            
             }
         }
         
