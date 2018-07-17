@@ -45,5 +45,9 @@ struct Constants {
         static let main = "tableView"
         static let list = "listTableView"
     }
+    
+    enum DateFormat: String {
+        case dateOfBirth = "MMMM dd, YYYY"
+    }
 }
 

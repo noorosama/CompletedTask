@@ -18,7 +18,7 @@ enum FormField {
     
     var keyboardType: UIKeyboardType? {
         switch self {
-        case .email: return UIKeyboardType.emailAddress
+        case .email: return .emailAddress
         case .country: return nil
         case .city: return nil
         case .date: return nil

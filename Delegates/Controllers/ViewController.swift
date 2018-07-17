@@ -167,33 +167,47 @@ extension ViewController: UIPickerViewDataSource {
             
             let cell = tableView.cellForRow(at: indexPath) as? TableLocationViewCell
             
-            cell?.textField.text = cityItems[row].text
+            cell?.displayTextField(text: cityItems[row].text)
         }
     }
 
 //MARK: - Actions
 private extension ViewController {
     
-    func itemTextFieldTapped(_ textField: UITextField, at indexPath: IndexPath) {
+    func navigateToListVC() {
         
         let storyboard = UIStoryboard(name: Constants.StoryboardName.list, bundle: nil)
+        
         let listViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.list) as! ListViewController
-       
-        if fields[indexPath.row] == .country {
-           self.locationItems = self.countryItems
-           listViewController.itemsPassed = self.locationItems
-           self.navigationController?.pushViewController(listViewController, animated: true)
-          
+        
+        self.locationItems = self.countryItems
+        
+        listViewController.itemsPassed = self.locationItems
+        
+        listViewController.selectedItemComplitionHandlerrr = { indexPath in
+            self.didSelectItem(at: indexPath)
         }
         
-        if fields[indexPath.row] == .city {
+        self.navigationController?.pushViewController(listViewController, animated: true)
+        
+    }
+    
+    func itemTextFieldTapped(_ textField: UITextField, at indexPath: IndexPath) {
+        
+        let field = fields[indexPath.row]
+        
+        if field == .country {
+            navigateToListVC()
+        }
+        
+        if field == .city {
             
            textField.inputView = picker
            picker.tag = textField.tag
             
         }
         
-        if fields[indexPath.row] == .date {
+        if field == .date {
             
             let datePickerView : UIDatePicker = UIDatePicker()
             let dateFormatter = DateFormatter()
@@ -206,24 +220,16 @@ private extension ViewController {
             datePickerView.addTarget(self, action: #selector(datePickerValueChanged(caller:)), for: UIControlEvents.valueChanged)
         }
         
-        listViewController.selectedItemComplitionHandlerrr = { indexPath in
-            self.didSelectItem(at: indexPath)
-        }
+        
     }
     
     @objc func datePickerValueChanged(caller: UIDatePicker){
-        
-      
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM dd, YYYY"
-        dateFormatter.dateStyle = DateFormatter.Style.medium
-        dateFormatter.timeStyle = DateFormatter.Style.none
         
         let indexPath = IndexPath(row: caller.tag, section: 0)
 
         let cell = tableView.cellForRow(at: indexPath) as? TableLocationViewCell
      
-        cell?.textField.text = dateFormatter.string(from: caller.date)
+        cell?.textField.text = caller.date.toString(.dateOfBirth)
         
     }
     
@@ -260,7 +266,9 @@ extension ViewController: UITableViewDataSource  {
         cell.textField.tag = indexPath.row
         cell.displayTextField(text: selectedItem?.text ?? "")
         cell.displayTextFieldPlaceholder(placeholder: field.placeholder)
- //       cell.setKeyboardType(keyboardType: field.keyboardType!)
+        if let keyboardType = field.keyboardType {
+            cell.setKeyboardType(keyboardType: keyboardType)
+        }
         
         return cell
     }
