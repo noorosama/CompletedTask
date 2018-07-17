@@ -30,8 +30,7 @@ class ViewController: UIViewController {
     ]
     
     let picker = UIPickerView()
-//    let datePickerView : UIDatePicker = UIDatePicker()
-    
+
     //MARK: Outlets
     
     @IBOutlet private weak var tableView: UITableView!
@@ -115,6 +114,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        picker.delegate = self
+        picker.dataSource = self
       
         configureTableView()
         
@@ -142,29 +144,37 @@ private extension ViewController {
 extension ViewController: UIPickerViewDataSource {
    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        
         return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        
         return cityItems.count
     }
-    
-    func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return cityItems[row].text
-    }
-    
-    func pickerView( pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-         selectedItem?.text = cityItems[row].text
-    }
-    
 }
+    //MARK: - UIPickerViewDelegate
+    extension ViewController: UIPickerViewDelegate {
+        
+        func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            
+            return cityItems[row].text
+        }
+        
+        func pickerView( _ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+            
+            let indexPath = IndexPath(row: picker.tag, section: 0)
+            
+            let cell = tableView.cellForRow(at: indexPath) as? TableLocationViewCell
+            
+            cell?.textField.text = cityItems[row].text
+        }
+    }
 
 //MARK: - Actions
 private extension ViewController {
     
     func itemTextFieldTapped(_ textField: UITextField, at indexPath: IndexPath) {
-        
-//        self.view.endEditing(true)
         
         let storyboard = UIStoryboard(name: Constants.StoryboardName.list, bundle: nil)
         let listViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.list) as! ListViewController
@@ -177,19 +187,22 @@ private extension ViewController {
         }
         
         if fields[indexPath.row] == .city {
-            picker.delegate = self as? UIPickerViewDelegate
+            
+           textField.inputView = picker
+           picker.tag = textField.tag
+            
         }
         
         if fields[indexPath.row] == .date {
             
-           let datePickerView : UIDatePicker = UIDatePicker()
-        let dateFormatter = DateFormatter()
+            let datePickerView : UIDatePicker = UIDatePicker()
+            let dateFormatter = DateFormatter()
+            
             datePickerView.datePickerMode = UIDatePickerMode.date
             textField.inputView = datePickerView
             datePickerView.tag = textField.tag
+            textField.text = dateFormatter.string(from: datePickerView.date)
             
-            
-         textField.text = dateFormatter.string(from: datePickerView.date)
             datePickerView.addTarget(self, action: #selector(datePickerValueChanged(caller:)), for: UIControlEvents.valueChanged)
         }
         
@@ -257,19 +270,6 @@ extension ViewController: UITableViewDataSource  {
 //MARK: - UITableViewDelegate
 
 extension ViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let field = fields[indexPath.row]
-        switch field {
-       
-        case .city: return
-        case .email: return
-        case .date: return
-        default:
-            break
-        }
-    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
