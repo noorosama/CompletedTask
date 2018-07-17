@@ -18,18 +18,19 @@ class ViewController: UIViewController {
     
     var selectedItem: LocationItem?
     
-    var selectedIndexPath: IndexPath?
-    
     var locationData = LocationData()
     
     //MARK: Constants
     
     let fields: [FormField] = [
-       .city,
-       .country,
        .email,
+       .country,
+       .city,
        .date
     ]
+    
+    let picker = UIPickerView()
+//    let datePickerView : UIDatePicker = UIDatePicker()
     
     //MARK: Outlets
     
@@ -114,7 +115,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-       
+      
         configureTableView()
         
     }
@@ -137,46 +138,90 @@ private extension ViewController {
     }
 }
 
+//MARK: - UIPickerViewDataSource
+extension ViewController: UIPickerViewDataSource {
+   
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return cityItems.count
+    }
+    
+    func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return cityItems[row].text
+    }
+    
+    func pickerView( pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+         selectedItem?.text = cityItems[row].text
+    }
+    
+}
+
 //MARK: - Actions
 private extension ViewController {
     
     func itemTextFieldTapped(_ textField: UITextField, at indexPath: IndexPath) {
         
-        let point = textField.convert(textField.bounds.origin, to: tableView)
-        let textFieldIndexPath = tableView.indexPathForRow(at: point)
-        self.selectedIndexPath = textFieldIndexPath
+//        self.view.endEditing(true)
         
         let storyboard = UIStoryboard(name: Constants.StoryboardName.list, bundle: nil)
         let listViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.list) as! ListViewController
-        
-        if indexPath.row == 0 {
-            self.locationItems = self.countryItems
-        }else {
-            self.locationItems = self.cityItems
+       
+        if fields[indexPath.row] == .country {
+           self.locationItems = self.countryItems
+           listViewController.itemsPassed = self.locationItems
+           self.navigationController?.pushViewController(listViewController, animated: true)
+          
         }
-        listViewController.itemsPassed = self.locationItems
         
-        self.view.endEditing(true)
+        if fields[indexPath.row] == .city {
+            picker.delegate = self as? UIPickerViewDelegate
+        }
         
-        self.navigationController?.pushViewController(listViewController, animated: true)
+        if fields[indexPath.row] == .date {
+            
+           let datePickerView : UIDatePicker = UIDatePicker()
+        let dateFormatter = DateFormatter()
+            datePickerView.datePickerMode = UIDatePickerMode.date
+            textField.inputView = datePickerView
+            datePickerView.tag = textField.tag
+            
+            
+         textField.text = dateFormatter.string(from: datePickerView.date)
+            datePickerView.addTarget(self, action: #selector(datePickerValueChanged(caller:)), for: UIControlEvents.valueChanged)
+        }
         
         listViewController.selectedItemComplitionHandlerrr = { indexPath in
             self.didSelectItem(at: indexPath)
         }
+    }
+    
+    @objc func datePickerValueChanged(caller: UIDatePicker){
+        
+      
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM dd, YYYY"
+        dateFormatter.dateStyle = DateFormatter.Style.medium
+        dateFormatter.timeStyle = DateFormatter.Style.none
+        
+        let indexPath = IndexPath(row: caller.tag, section: 0)
+
+        let cell = tableView.cellForRow(at: indexPath) as? TableLocationViewCell
+     
+        cell?.textField.text = dateFormatter.string(from: caller.date)
         
     }
     
     func didSelectItem(at indexPath: IndexPath) {
         
-        self.selectedItem = self.locationItems[indexPath.row]
+       self.selectedItem = self.locationItems[indexPath.row]
+
+       self.locationData.countryItem = (self.selectedItem?.text)!
         
-        if self.selectedIndexPath?.row == 0 {
-           self.locationData.countryItem = (self.selectedItem?.text)!
-        } else {
-           self.locationData.cityItem = (self.selectedItem?.text)!
-        }
-        
-        tableView.reloadData()
+       tableView.reloadRows(at: [indexPath], with: .none)
+
     }
 }
 
@@ -196,16 +241,13 @@ extension ViewController: UITableViewDataSource  {
         let field = fields[indexPath.row]
         
         cell.textFieldComplitionHandlerr = { textField in
+            
             self.itemTextFieldTapped(textField, at: indexPath)
         }
-        
-        if let selectedIndexx = selectedIndexPath {
-            if selectedIndexx.row == indexPath.row {
-                cell.displayTextField(text: selectedItem?.text ?? "")
-                cell.displayTextFieldPlaceholder(placeholder: field.placeholder)
-                cell.setKeyboardType(keyboardType: field.keyboardType!)
-            }
-        }
+        cell.textField.tag = indexPath.row
+        cell.displayTextField(text: selectedItem?.text ?? "")
+        cell.displayTextFieldPlaceholder(placeholder: field.placeholder)
+ //       cell.setKeyboardType(keyboardType: field.keyboardType!)
         
         return cell
     }
@@ -215,6 +257,19 @@ extension ViewController: UITableViewDataSource  {
 //MARK: - UITableViewDelegate
 
 extension ViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let field = fields[indexPath.row]
+        switch field {
+       
+        case .city: return
+        case .email: return
+        case .date: return
+        default:
+            break
+        }
+    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         

@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-class TableLocationViewCell: UITableViewCell, UITextFieldDelegate {
+class TableLocationViewCell: UITableViewCell, UITextFieldDelegate,UIPickerViewDelegate {
     
     //MARK: Variables
     
@@ -45,11 +45,11 @@ extension TableLocationViewCell {
         textField.keyboardType = keyboardType
     }
     
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         
         textFieldComplitionHandlerr?(textField)
-        return false
     }
+    
 }
 
 

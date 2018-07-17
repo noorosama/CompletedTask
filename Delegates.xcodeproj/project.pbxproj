@@ -245,9 +245,9 @@
 		36D3D4AF20C66F08007C9954 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				362F894620E11116006ECE30 /* SummaryTableViewCell */,
 				3654262520BD7EF600133696 /* TableLocationViewCell */,
 				36D3D4A920C66716007C9954 /* TableCityCountryViewCell */,
+				362F894620E11116006ECE30 /* SummaryTableViewCell */,
 			);
 			path = Cells;
 			sourceTree = "<group>";

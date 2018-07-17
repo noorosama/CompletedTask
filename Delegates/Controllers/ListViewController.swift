@@ -20,7 +20,9 @@ class ListViewController: UIViewController {
     
     //MARK: View LifeCycle
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         configurListTableView()
     }
 }

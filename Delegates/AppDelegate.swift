@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Delegates
 //
-//  Created by SajaHammad on 5/28/18.
+//  Created by Nour Abukhaled on 5/28/18.
 //  Copyright © 2018 Nour Abukhaled. All rights reserved.
 //
 
