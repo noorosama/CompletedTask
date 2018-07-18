@@ -33,4 +33,11 @@ enum FormField {
         case .date: return "Please pic your date of birth"
         }
     }
+    
+    var shouldBeginEditing: Bool {
+        switch self {
+        case .country: return false
+        default: return true
+        }
+    }
 }

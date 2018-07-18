@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     var locationItems: [LocationItem] = []
     
     var selectedItem: LocationItem?
+    var textValue: String?
     
     var locationData = LocationData()
     
@@ -29,7 +30,11 @@ class ViewController: UIViewController {
        .date
     ]
     
-    let picker = UIPickerView()
+    let cityPickerView = UIPickerView()
+    let datePickerView : UIDatePicker = UIDatePicker()
+    let dateFormatter = DateFormatter()
+    
+    var countryIndexPath: IndexPath!
 
     //MARK: Outlets
     
@@ -115,10 +120,8 @@ class ViewController: UIViewController {
         
         super.viewDidLoad()
         
-        picker.delegate = self
-        picker.dataSource = self
-      
         configureTableView()
+        configureCityPickerView()
         
     }
 }
@@ -138,6 +141,12 @@ private extension ViewController {
         let locationFooterXib = UINib(nibName: Constants.NibName.footer, bundle: nil)
         tableView.register(locationFooterXib, forHeaderFooterViewReuseIdentifier: Constants.Identifier.footer)
     }
+    
+    func configureCityPickerView() {
+        
+        cityPickerView.delegate = self
+        cityPickerView.dataSource = self
+    }
 }
 
 //MARK: - UIPickerViewDataSource
@@ -152,29 +161,31 @@ extension ViewController: UIPickerViewDataSource {
         
         return cityItems.count
     }
+    
 }
-    //MARK: - UIPickerViewDelegate
-    extension ViewController: UIPickerViewDelegate {
+
+//MARK: - UIPickerViewDelegate
+extension ViewController: UIPickerViewDelegate {
         
-        func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
             
             return cityItems[row].text
-        }
+       }
         
-        func pickerView( _ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView( _ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
             
-            let indexPath = IndexPath(row: picker.tag, section: 0)
+            let indexPath = IndexPath(row: cityPickerView.tag, section: 0)
             
             let cell = tableView.cellForRow(at: indexPath) as? TableLocationViewCell
             
             cell?.displayTextField(text: cityItems[row].text)
         }
-    }
+  }
 
 //MARK: - Actions
 private extension ViewController {
     
-    func navigateToListVC() {
+    func navigateToListViewController() {
         
         let storyboard = UIStoryboard(name: Constants.StoryboardName.list, bundle: nil)
         
@@ -184,11 +195,25 @@ private extension ViewController {
         
         listViewController.itemsPassed = self.locationItems
         
+        self.navigationController?.pushViewController(listViewController, animated: true)
+        
         listViewController.selectedItemComplitionHandlerrr = { indexPath in
             self.didSelectItem(at: indexPath)
         }
+
+    }
+    
+    func navigateToSummaryViewController() {
         
-        self.navigationController?.pushViewController(listViewController, animated: true)
+        let storyboard = UIStoryboard(name: Constants.StoryboardName.summary, bundle: nil)
+        
+        let summaryViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.summary) as! SummaryViewController
+        
+        summaryViewController.descriptionCountry = self.locationData.countryItem
+        
+        summaryViewController.descriptionCity = self.locationData.cityItem
+        
+        self.navigationController?.pushViewController(summaryViewController, animated: true)
         
     }
     
@@ -198,49 +223,57 @@ private extension ViewController {
         
         if field == .country {
             
-            navigateToListVC()
+            navigateToListViewController()
         }
         
         if field == .city {
             
-           textField.inputView = picker
-           picker.tag = textField.tag
+           textField.inputView = cityPickerView
+           cityPickerView.tag = textField.tag
             
         }
         
         if field == .date {
             
-            let datePickerView : UIDatePicker = UIDatePicker()
-            let dateFormatter = DateFormatter()
-            
             datePickerView.datePickerMode = UIDatePickerMode.date
             textField.inputView = datePickerView
             datePickerView.tag = textField.tag
-            textField.text = dateFormatter.string(from: datePickerView.date)
-            
-            datePickerView.addTarget(self, action: #selector(datePickerValueChanged(caller:)), for: UIControlEvents.valueChanged)
+//            textField.text = dateFormatter.string(from: datePickerView.date)
+//
+//            datePickerView.addTarget(self, action: #selector(datePickerValueChanged(caller:)), for: UIControlEvents.valueChanged)
+
         }
         
+        if field == .email {
+            
+            textValue = textField.text
+        }
         
     }
     
-    @objc func datePickerValueChanged(caller: UIDatePicker){
-        
-        let indexPath = IndexPath(row: caller.tag, section: 0)
-
-        let cell = tableView.cellForRow(at: indexPath) as? TableLocationViewCell
-     
-        cell?.textField.text = caller.date.toString(.dateOfBirth)
-        
+    func textFieldDidEndEditing(_ textField: UITextField){
+        textField.text = datePickerView.date.toString(.dateOfBirth)
     }
+    
+//    @objc func datePickerValueChanged(caller: UIDatePicker){
+//
+//        let indexPath = IndexPath(row: caller.tag, section: 0)
+//
+//        let cell = tableView.cellForRow(at: indexPath) as? TableLocationViewCell
+//
+//        cell?.textField.text = caller.date.toString(.dateOfBirth)
+//
+//    }
     
     func didSelectItem(at indexPath: IndexPath) {
         
-       self.selectedItem = self.locationItems[indexPath.row]
-
-       self.locationData.countryItem = (self.selectedItem?.text)!
+        self.selectedItem = self.locationItems[indexPath.row]
         
-       tableView.reloadRows(at: [indexPath], with: .none)
+        self.locationData.countryItem = (selectedItem?.text)!
+
+        let cell = tableView.cellForRow(at: countryIndexPath) as? TableLocationViewCell
+        
+        cell?.textField.text = locationData.countryItem
 
     }
 }
@@ -260,14 +293,39 @@ extension ViewController: UITableViewDataSource  {
         
         let field = fields[indexPath.row]
         
+        if field == .country {
+            
+            countryIndexPath = indexPath
+        }
+        
+        if field == .date{
+            cell.doneComplitionHandler = { textField in
+                self.textFieldDidEndEditing(textField)
+            }
+        }
+       
+        
         cell.textFieldComplitionHandlerr = { textField in
             
             self.itemTextFieldTapped(textField, at: indexPath)
         }
+        
+        cell.shouldBeginEditingEnabled(field.shouldBeginEditing)
+        
         cell.textField.tag = indexPath.row
+        
+//        if field == .country {
+            
         cell.displayTextField(text: selectedItem?.text ?? "")
+            
+//        } else if field == .email {
+//            
+//            cell.displayTextField(text: textValue ?? "")
+//        }
         cell.displayTextFieldPlaceholder(placeholder: field.placeholder)
+        
         if let keyboardType = field.keyboardType {
+            
             cell.setKeyboardType(keyboardType: keyboardType)
         }
         
@@ -279,8 +337,6 @@ extension ViewController: UITableViewDataSource  {
 //MARK: - UITableViewDelegate
 
 extension ViewController: UITableViewDelegate {
-    
-  
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
@@ -298,17 +354,14 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         
-        let storyboard = UIStoryboard(name: Constants.StoryboardName.summary, bundle: nil)
-        let summaryViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.summary) as! SummaryViewController
-        
         
         let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.footer) as! TableFooterView
 
-        footerView.displayButtonName(text: LocalizationKeys.ButtonNames.submitButton.localized)
+            footerView.displayButtonName(text: LocalizationKeys.ButtonNames.submitButton.localized)
         
-        footerView.submitComplitionHandler = {
+           footerView.submitComplitionHandler = {
             
-            if self.locationData.countryItem.isEmpty || self.locationData.cityItem.isEmpty {
+            if self.locationData.countryItem.isEmpty  {
 
                 self.showAlert(message: LocalizationKeys.Messages.emptyFieldMessage.localized, handler: nil)
 
@@ -316,15 +369,12 @@ extension ViewController: UITableViewDelegate {
             
                 self.showAlert(message: LocalizationKeys.Messages.successMessage.localized, handler: {
 
-                    summaryViewController.descriptionCountry = self.locationData.countryItem
-                    summaryViewController.descriptionCity = self.locationData.cityItem
-
-                    self.navigationController?.pushViewController(summaryViewController, animated: true)
+                    self.navigateToSummaryViewController()
 
                 })
             
             }
-        }
+         }
         
         return footerView
     }
