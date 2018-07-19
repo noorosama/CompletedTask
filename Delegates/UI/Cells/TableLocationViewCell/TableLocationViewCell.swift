@@ -54,11 +54,14 @@ extension TableLocationViewCell {
 extension TableLocationViewCell: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        
         textFieldComplitionHandlerr?(textField)
+        
         return shouldBeginEditing
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        
         doneComplitionHandler?(textField)
     }
 

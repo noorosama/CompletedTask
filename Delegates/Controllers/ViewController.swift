@@ -19,7 +19,7 @@ class ViewController: UIViewController {
     var selectedItem: LocationItem?
     var textValue: String?
     
-    var locationData = LocationData()
+    var rigestrationData = RegistrationData()
     
     //MARK: Constants
     
@@ -29,10 +29,10 @@ class ViewController: UIViewController {
        .city,
        .date
     ]
-    
+
     let cityPickerView = UIPickerView()
     let datePickerView : UIDatePicker = UIDatePicker()
-    let dateFormatter = DateFormatter()
+
     
     var countryIndexPath: IndexPath!
 
@@ -117,11 +117,42 @@ class ViewController: UIViewController {
     //MARK: View LifeCycle
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
         configureTableView()
         configureCityPickerView()
+        
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.footer) as! TableFooterView
+        
+        footerView.displayButtonName(text: LocalizationKeys.ButtonNames.submitButton.localized)
+        
+        footerView.submitComplitionHandler = {
+            
+            if self.rigestrationData.countryItem.isEmpty  {
+                
+                self.showAlert(message: LocalizationKeys.Messages.emptyFieldMessage.localized, handler: nil)
+                
+            } else {
+                
+                self.showAlert(message: LocalizationKeys.Messages.successMessage.localized, handler: {
+                    
+                    self.navigateToSummaryViewController()
+                    
+                })
+                
+            }
+        }
+
+
+        let contentView = UIView(frame:
+            CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 80)
+        )
+        
+        contentView.addSubview(footerView)
+        
+        footerView.frame = contentView.bounds
+        
+        tableView.tableFooterView = contentView
         
     }
 }
@@ -201,8 +232,9 @@ private extension ViewController {
         
         self.navigationController?.pushViewController(listViewController, animated: true)
         
-        listViewController.selectedItemComplitionHandlerrr = { indexPath in
-            self.didSelectItem(at: indexPath)
+        listViewController.selectedItemComplitionHandlerrr = { [weak self]indexPath in
+            
+            self?.didSelectItem(at: indexPath)
         }
 
     }
@@ -213,7 +245,7 @@ private extension ViewController {
         
         let summaryViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.summary) as! SummaryViewController
         
-        summaryViewController.descriptionCountry = self.locationData.countryItem
+        summaryViewController.descriptionCountry = self.rigestrationData.countryItem
         
         self.navigationController?.pushViewController(summaryViewController, animated: true)
         
@@ -248,7 +280,7 @@ private extension ViewController {
         
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField,_ field: FormField){
+    func textFieldDidEndEditing(_ textField: UITextField,_ field: FormField) {
         
         if field == .date {
             
@@ -264,11 +296,11 @@ private extension ViewController {
         
         self.selectedItem = self.locationItems[indexPath.row]
         
-        self.locationData.countryItem = (selectedItem?.text)!
+        self.rigestrationData.countryItem = (selectedItem?.text)!
 
         let cell = tableView.cellForRow(at: countryIndexPath) as? TableLocationViewCell
         
-        cell?.textField.text = locationData.countryItem
+        cell?.textField.text = rigestrationData.countryItem
 
     }
 }
@@ -278,13 +310,14 @@ private extension ViewController {
 extension ViewController: UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return 4
+        return fields.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.Identifier.mainCell, for: indexPath) as! TableLocationViewCell
+        
+        cell.selectionStyle = .none
         
         let field = fields[indexPath.row]
         
@@ -295,15 +328,15 @@ extension ViewController: UITableViewDataSource  {
         
         if field == .date || field == .city {
             
-            cell.doneComplitionHandler = { textField in
+            cell.doneComplitionHandler = { [weak self] textField in
                 
-                self.textFieldDidEndEditing(textField, field)
+                self?.textFieldDidEndEditing(textField, field)
             }
         }
         
-        cell.textFieldComplitionHandlerr = { textField in
+        cell.textFieldComplitionHandlerr = { [weak self]textField in
             
-            self.itemTextFieldTapped(textField, at: indexPath)
+            self?.itemTextFieldTapped(textField, at: indexPath)
         }
         
         cell.shouldBeginEditingEnabled(field.shouldBeginEditing)
@@ -337,39 +370,10 @@ extension ViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
         return 50
     }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        
-        
-        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.footer) as! TableFooterView
 
-            footerView.displayButtonName(text: LocalizationKeys.ButtonNames.submitButton.localized)
-        
-           footerView.submitComplitionHandler = {
-            
-            if self.locationData.countryItem.isEmpty  {
-
-                self.showAlert(message: LocalizationKeys.Messages.emptyFieldMessage.localized, handler: nil)
-
-            } else {
-            
-                self.showAlert(message: LocalizationKeys.Messages.successMessage.localized, handler: {
-
-                    self.navigateToSummaryViewController()
-
-                })
-            
-            }
-         }
-        
-        return footerView
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 50
-    }
     
 }
 
