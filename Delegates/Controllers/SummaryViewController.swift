@@ -82,10 +82,12 @@ extension SummaryViewController: UITableViewDataSource  {
            
             cell.displayLabel(text: LocalizationKeys.labels.country.localized)
             cell.displayDescription(text: descriptionCountry!)
-        } else {
-            cell.displayLabel(text: LocalizationKeys.labels.city.localized)
-            cell.displayDescription(text: descriptionCity!)
+            
         }
+//        } else {
+//            cell.displayLabel(text: LocalizationKeys.labels.city.localized)
+//            cell.displayDescription(text: descriptionCity!)
+//        }
         
         return cell
     }

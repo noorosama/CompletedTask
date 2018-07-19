@@ -128,6 +128,7 @@ class ViewController: UIViewController {
 
 
 //MARK: - Configurations
+
 private extension ViewController {
     
     func configureTableView() {
@@ -150,6 +151,7 @@ private extension ViewController {
 }
 
 //MARK: - UIPickerViewDataSource
+
 extension ViewController: UIPickerViewDataSource {
    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -165,6 +167,7 @@ extension ViewController: UIPickerViewDataSource {
 }
 
 //MARK: - UIPickerViewDelegate
+
 extension ViewController: UIPickerViewDelegate {
         
     func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -183,6 +186,7 @@ extension ViewController: UIPickerViewDelegate {
   }
 
 //MARK: - Actions
+
 private extension ViewController {
     
     func navigateToListViewController() {
@@ -211,8 +215,6 @@ private extension ViewController {
         
         summaryViewController.descriptionCountry = self.locationData.countryItem
         
-        summaryViewController.descriptionCity = self.locationData.cityItem
-        
         self.navigationController?.pushViewController(summaryViewController, animated: true)
         
     }
@@ -229,6 +231,7 @@ private extension ViewController {
         if field == .city {
             
            textField.inputView = cityPickerView
+            
            cityPickerView.tag = textField.tag
             
         }
@@ -236,34 +239,26 @@ private extension ViewController {
         if field == .date {
             
             datePickerView.datePickerMode = UIDatePickerMode.date
+            
             textField.inputView = datePickerView
+            
             datePickerView.tag = textField.tag
-//            textField.text = dateFormatter.string(from: datePickerView.date)
-//
-//            datePickerView.addTarget(self, action: #selector(datePickerValueChanged(caller:)), for: UIControlEvents.valueChanged)
 
         }
         
-        if field == .email {
-            
-            textValue = textField.text
-        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField,_ field: FormField){
         
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField){
+        if field == .date {
+            
         textField.text = datePickerView.date.toString(.dateOfBirth)
+            
+        } else {
+        
+        textField.text = cityItems[cityPickerView.selectedRow(inComponent: 0)].text
     }
-    
-//    @objc func datePickerValueChanged(caller: UIDatePicker){
-//
-//        let indexPath = IndexPath(row: caller.tag, section: 0)
-//
-//        let cell = tableView.cellForRow(at: indexPath) as? TableLocationViewCell
-//
-//        cell?.textField.text = caller.date.toString(.dateOfBirth)
-//
-//    }
+}
     
     func didSelectItem(at indexPath: IndexPath) {
         
@@ -298,12 +293,13 @@ extension ViewController: UITableViewDataSource  {
             countryIndexPath = indexPath
         }
         
-        if field == .date{
+        if field == .date || field == .city {
+            
             cell.doneComplitionHandler = { textField in
-                self.textFieldDidEndEditing(textField)
+                
+                self.textFieldDidEndEditing(textField, field)
             }
         }
-       
         
         cell.textFieldComplitionHandlerr = { textField in
             
@@ -314,14 +310,6 @@ extension ViewController: UITableViewDataSource  {
         
         cell.textField.tag = indexPath.row
         
-//        if field == .country {
-            
-        cell.displayTextField(text: selectedItem?.text ?? "")
-            
-//        } else if field == .email {
-//            
-//            cell.displayTextField(text: textValue ?? "")
-//        }
         cell.displayTextFieldPlaceholder(placeholder: field.placeholder)
         
         if let keyboardType = field.keyboardType {

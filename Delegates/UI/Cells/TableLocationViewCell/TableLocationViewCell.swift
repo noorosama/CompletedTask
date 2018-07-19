@@ -50,6 +50,7 @@ extension TableLocationViewCell {
 }
 
 //MARK: - UITextFieldDelegate
+
 extension TableLocationViewCell: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
