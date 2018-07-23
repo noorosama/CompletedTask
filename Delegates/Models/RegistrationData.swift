@@ -14,5 +14,7 @@ class RegistrationData {
     
     var countryItem = ""
     var cityItem = ""
+    var email = ""
+    var date = ""
 
 }

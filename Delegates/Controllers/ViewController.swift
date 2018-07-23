@@ -17,9 +17,12 @@ class ViewController: UIViewController {
     var locationItems: [LocationItem] = []
     
     var selectedItem: LocationItem?
-    var textValue: String?
     
-    var rigestrationData = RegistrationData()
+    var registrationData = RegistrationData()
+    
+    var countryIndexPath: IndexPath!
+    
+    var itemData: [String]?
     
     //MARK: Constants
     
@@ -32,9 +35,6 @@ class ViewController: UIViewController {
 
     let cityPickerView = UIPickerView()
     let datePickerView : UIDatePicker = UIDatePicker()
-
-    
-    var countryIndexPath: IndexPath!
 
     //MARK: Outlets
     
@@ -117,18 +117,21 @@ class ViewController: UIViewController {
     //MARK: View LifeCycle
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         configureTableView()
         configureCityPickerView()
         
         let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.footer) as! TableFooterView
-        
+
         footerView.displayButtonName(text: LocalizationKeys.ButtonNames.submitButton.localized)
         
         footerView.submitComplitionHandler = {
+
             
-            if self.rigestrationData.countryItem.isEmpty  {
+            if self.registrationData.countryItem.isEmpty ||
+               self.registrationData.date.isEmpty || self.registrationData.cityItem.isEmpty {
                 
                 self.showAlert(message: LocalizationKeys.Messages.emptyFieldMessage.localized, handler: nil)
                 
@@ -141,9 +144,9 @@ class ViewController: UIViewController {
                 })
                 
             }
+
         }
-
-
+        
         let contentView = UIView(frame:
             CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 80)
         )
@@ -245,7 +248,7 @@ private extension ViewController {
         
         let summaryViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.summary) as! SummaryViewController
         
-        summaryViewController.descriptionCountry = self.rigestrationData.countryItem
+        summaryViewController.descriptionCountry = self.registrationData.countryItem
         
         self.navigationController?.pushViewController(summaryViewController, animated: true)
         
@@ -285,10 +288,14 @@ private extension ViewController {
         if field == .date {
             
         textField.text = datePickerView.date.toString(.dateOfBirth)
+        
+       registrationData.date = datePickerView.date.toString(.dateOfBirth)
             
         } else {
         
         textField.text = cityItems[cityPickerView.selectedRow(inComponent: 0)].text
+            
+        registrationData.cityItem = cityItems[cityPickerView.selectedRow(inComponent: 0)].text
     }
 }
     
@@ -296,11 +303,11 @@ private extension ViewController {
         
         self.selectedItem = self.locationItems[indexPath.row]
         
-        self.rigestrationData.countryItem = (selectedItem?.text)!
+        self.registrationData.countryItem = (selectedItem?.text)!
 
         let cell = tableView.cellForRow(at: countryIndexPath) as? TableLocationViewCell
         
-        cell?.textField.text = rigestrationData.countryItem
+        cell?.textField.text = registrationData.countryItem
 
     }
 }
@@ -334,7 +341,7 @@ extension ViewController: UITableViewDataSource  {
             }
         }
         
-        cell.textFieldComplitionHandlerr = { [weak self]textField in
+        cell.textFieldComplitionHandlerr = { [weak self] textField in
             
             self?.itemTextFieldTapped(textField, at: indexPath)
         }
