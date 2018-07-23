@@ -9,6 +9,11 @@ import UIKit
 
 class ViewController: UIViewController {
    
+    enum validateResult {
+        
+        case valid(String)
+        case inValid(String)
+    }
     
     //MARK: Variables
     
@@ -121,30 +126,27 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         configureTableView()
-        configureCityPickerView()
         
-        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.footer) as! TableFooterView
+        configureCityPickerView()
 
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.footer) as! TableFooterView
+        
         footerView.displayButtonName(text: LocalizationKeys.ButtonNames.submitButton.localized)
         
         footerView.submitComplitionHandler = {
-
             
-            if self.registrationData.countryItem.isEmpty ||
-               self.registrationData.date.isEmpty || self.registrationData.cityItem.isEmpty {
+            let result = self.validate()
+            
+            switch result {
                 
-                self.showAlert(message: LocalizationKeys.Messages.emptyFieldMessage.localized, handler: nil)
+            case .inValid(let invalidMessage):
+                self.showAlert(message: invalidMessage, handler: nil)
                 
-            } else {
-                
-                self.showAlert(message: LocalizationKeys.Messages.successMessage.localized, handler: {
-                    
+            case .valid(let validMessage):
+                self.showAlert(message: validMessage, handler: {
                     self.navigateToSummaryViewController()
-                    
                 })
-                
             }
-
         }
         
         let contentView = UIView(frame:
@@ -158,8 +160,8 @@ class ViewController: UIViewController {
         tableView.tableFooterView = contentView
         
     }
+    
 }
-
 
 //MARK: - Configurations
 
@@ -309,6 +311,20 @@ private extension ViewController {
         
         cell?.textField.text = registrationData.countryItem
 
+    }
+    
+    func validate() -> validateResult  {
+        
+        if registrationData.countryItem.isEmpty || registrationData.date.isEmpty || registrationData.cityItem.isEmpty {
+            
+            return .inValid(LocalizationKeys.Messages.emptyFieldMessage.localized)
+            
+        } else {
+            
+            return .valid(LocalizationKeys.Messages.successMessage.localized)
+            
+        }
+        
     }
 }
 
