@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		193FE1DF210635690065A1E7 /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193FE1DE210635690065A1E7 /* UITableViewExtensions.swift */; };
+		193FE1E32106F9D60065A1E7 /* ValidateResultEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193FE1E22106F9D60065A1E7 /* ValidateResultEnum.swift */; };
 		362F893C20E0F77E006ECE30 /* RegistrationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362F893B20E0F77E006ECE30 /* RegistrationData.swift */; };
 		362F894420E11100006ECE30 /* SummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362F894220E11100006ECE30 /* SummaryTableViewCell.swift */; };
 		362F894520E11100006ECE30 /* SummaryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 362F894320E11100006ECE30 /* SummaryTableViewCell.xib */; };
@@ -28,7 +29,7 @@
 		3654262420BD7E7700133696 /* TableLocationViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3654262220BD7E7700133696 /* TableLocationViewCell.xib */; };
 		3654262D20BE974400133696 /* TableFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3654262C20BE974400133696 /* TableFooterView.swift */; };
 		3654263020BE97A100133696 /* TableFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3654262F20BE97A100133696 /* TableFooterView.xib */; };
-		36C6248E20EA59AD00A07311 /* stringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C6248D20EA59AD00A07311 /* stringExtensions.swift */; };
+		36C6248E20EA59AD00A07311 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C6248D20EA59AD00A07311 /* StringExtensions.swift */; };
 		36D3D48620C55D19007C9954 /* ListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 36D3D48520C55D19007C9954 /* ListViewController.storyboard */; };
 		36D3D48A20C55E8C007C9954 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D3D48920C55E8C007C9954 /* ListViewController.swift */; };
 		36D3D4AC20C668F5007C9954 /* TableCityCountryViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D3D4AA20C668F5007C9954 /* TableCityCountryViewCell.swift */; };
@@ -42,6 +43,7 @@
 /* Begin PBXFileReference section */
 		1521B91A857338FF3B74ED51 /* Pods-Delegates.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Delegates.release.xcconfig"; path = "Pods/Target Support Files/Pods-Delegates/Pods-Delegates.release.xcconfig"; sourceTree = "<group>"; };
 		193FE1DE210635690065A1E7 /* UITableViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewExtensions.swift; sourceTree = "<group>"; };
+		193FE1E22106F9D60065A1E7 /* ValidateResultEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateResultEnum.swift; sourceTree = "<group>"; };
 		362F893B20E0F77E006ECE30 /* RegistrationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationData.swift; sourceTree = "<group>"; };
 		362F894220E11100006ECE30 /* SummaryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryTableViewCell.swift; sourceTree = "<group>"; };
 		362F894320E11100006ECE30 /* SummaryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SummaryTableViewCell.xib; sourceTree = "<group>"; };
@@ -69,7 +71,7 @@
 		3654262220BD7E7700133696 /* TableLocationViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableLocationViewCell.xib; sourceTree = "<group>"; };
 		3654262C20BE974400133696 /* TableFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableFooterView.swift; sourceTree = "<group>"; };
 		3654262F20BE97A100133696 /* TableFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableFooterView.xib; sourceTree = "<group>"; };
-		36C6248D20EA59AD00A07311 /* stringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stringExtensions.swift; sourceTree = "<group>"; };
+		36C6248D20EA59AD00A07311 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		36D3D48520C55D19007C9954 /* ListViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ListViewController.storyboard; sourceTree = "<group>"; };
 		36D3D48920C55E8C007C9954 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		36D3D4AA20C668F5007C9954 /* TableCityCountryViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCityCountryViewCell.swift; sourceTree = "<group>"; };
@@ -144,8 +146,9 @@
 			isa = PBXGroup;
 			children = (
 				362F895620E3C277006ECE30 /* UIViewControllerExtensions.swift */,
-				36C6248D20EA59AD00A07311 /* stringExtensions.swift */,
+				36C6248D20EA59AD00A07311 /* StringExtensions.swift */,
 				5D19DC7820FDFAC4006B6E6D /* DateExtensions.swift */,
+				193FE1E22106F9D60065A1E7 /* ValidateResultEnum.swift */,
 				193FE1DE210635690065A1E7 /* UITableViewExtensions.swift */,
 			);
 			path = Extensions;
@@ -424,7 +427,7 @@
 			files = (
 				362F893C20E0F77E006ECE30 /* RegistrationData.swift in Sources */,
 				5D19DC7920FDFAC4006B6E6D /* DateExtensions.swift in Sources */,
-				36C6248E20EA59AD00A07311 /* stringExtensions.swift in Sources */,
+				36C6248E20EA59AD00A07311 /* StringExtensions.swift in Sources */,
 				193FE1DF210635690065A1E7 /* UITableViewExtensions.swift in Sources */,
 				36E3735C20FCAE170078D4E0 /* FormField.swift in Sources */,
 				365425DB20BC0DDB00133696 /* ViewController.swift in Sources */,
@@ -440,6 +443,7 @@
 				3654261E20BD7A7800133696 /* TableHeaderView.swift in Sources */,
 				3641838420EA34D70069A903 /* LocalizationKeys.swift in Sources */,
 				362F894A20E11CE3006ECE30 /* SummaryViewController.swift in Sources */,
+				193FE1E32106F9D60065A1E7 /* ValidateResultEnum.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

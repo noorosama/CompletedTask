@@ -11,7 +11,7 @@ import  UIKit
 
 extension UITableView {
     
-    func createFooterView() {
+    func createFooterView() -> TableFooterView? {
         
         let footerView = dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.footer) as! TableFooterView
         
@@ -24,6 +24,8 @@ extension UITableView {
         footerView.frame = contentView.bounds
         
         tableFooterView = contentView
+        
+        return footerView
         
      }
     

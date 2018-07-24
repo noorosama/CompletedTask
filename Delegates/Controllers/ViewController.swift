@@ -9,11 +9,11 @@ import UIKit
 
 class ViewController: UIViewController {
    
-    enum validateResult {
-        
-        case valid(String)
-        case inValid(String)
-    }
+//    enum validateResult {
+//
+//        case valid(String)
+//        case inValid(String)
+//    }
     
     //MARK: Variables
     
@@ -32,10 +32,10 @@ class ViewController: UIViewController {
     //MARK: Constants
     
     let fields: [FormField] = [
-       .email,
+        .date,
        .country,
        .city,
-       .date
+       .email
     ]
 
     let cityPickerView = UIPickerView()
@@ -129,13 +129,13 @@ class ViewController: UIViewController {
         
         configureCityPickerView()
 
-        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.Identifier.footer) as! TableFooterView
+        let footerView = tableView.createFooterView()
         
-        footerView.displayButtonName(text: LocalizationKeys.ButtonNames.submitButton.localized)
+        footerView?.displayButtonName(text: LocalizationKeys.ButtonNames.submitButton.localized)
         
-        footerView.submitComplitionHandler = {
+        footerView?.submitComplitionHandler = {
             
-            let result = self.validate()
+            let result = validate(registrationData: self.registrationData)
             
             switch result {
                 
@@ -148,16 +148,6 @@ class ViewController: UIViewController {
                 })
             }
         }
-        
-        let contentView = UIView(frame:
-            CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 80)
-        )
-        
-        contentView.addSubview(footerView)
-        
-        footerView.frame = contentView.bounds
-        
-        tableView.tableFooterView = contentView
         
     }
     
@@ -313,19 +303,19 @@ private extension ViewController {
 
     }
     
-    func validate() -> validateResult  {
-        
-        if registrationData.countryItem.isEmpty || registrationData.date.isEmpty || registrationData.cityItem.isEmpty {
-            
-            return .inValid(LocalizationKeys.Messages.emptyFieldMessage.localized)
-            
-        } else {
-            
-            return .valid(LocalizationKeys.Messages.successMessage.localized)
-            
-        }
-        
-    }
+//    func validate() -> validateResult  {
+//
+//        if registrationData.countryItem.isEmpty || registrationData.date.isEmpty || registrationData.cityItem.isEmpty {
+//
+//            return .inValid(LocalizationKeys.Messages.emptyFieldMessage.localized)
+//
+//        } else {
+//
+//            return .valid(LocalizationKeys.Messages.successMessage.localized)
+//
+//        }
+//
+//    }
 }
 
 //MARK: - UITableViewDataSource
