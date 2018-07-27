@@ -11,7 +11,10 @@ import Foundation
 struct LocalizationKeys {
     
     struct Messages {
-        static let emptyFieldMessage = "Messages.Empty"
+        static let emptyDateFieldMessage = "Messages.EmptyDate"
+        static let emptyCountryFieldMessage = "Messages.EmptyCountry"
+        static let emptyCityFieldMessage = "Message.EmptyCity"
+        static let emptyEmailFieldMessage = "Message.EmptyEmail"
         static let successMessage = "Messages.Success"
     }
     struct Headers {

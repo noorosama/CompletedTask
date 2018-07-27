@@ -8,12 +8,6 @@
 import UIKit
 
 class ViewController: UIViewController {
-   
-//    enum validateResult {
-//
-//        case valid(String)
-//        case inValid(String)
-//    }
     
     //MARK: Variables
     
@@ -32,7 +26,7 @@ class ViewController: UIViewController {
     //MARK: Constants
     
     let fields: [FormField] = [
-        .date,
+       .date,
        .country,
        .city,
        .email
@@ -135,17 +129,27 @@ class ViewController: UIViewController {
         
         footerView?.submitComplitionHandler = {
             
-            let result = validate(registrationData: self.registrationData)
+            let result = self.validate(registrationData: self.registrationData)
             
             switch result {
                 
-            case .inValid(let invalidMessage):
-                self.showAlert(message: invalidMessage, handler: nil)
+            case .emptyDate( let emptyDateMessage):
+                self.showAlert(message: emptyDateMessage, handler: nil)
+                
+            case .emptyCountry( let emptyCountryMessage):
+                self.showAlert(message: emptyCountryMessage, handler: nil)
+                
+            case .emptyCity( let emptyCityMessage ):
+                self.showAlert(message: emptyCityMessage, handler: nil)
+                
+            case .emptyEmail( let emptyEmailMessage):
+                self.showAlert(message: emptyEmailMessage, handler: nil)
                 
             case .valid(let validMessage):
                 self.showAlert(message: validMessage, handler: {
                     self.navigateToSummaryViewController()
                 })
+
             }
         }
         
@@ -283,13 +287,17 @@ private extension ViewController {
         
        registrationData.date = datePickerView.date.toString(.dateOfBirth)
             
-        } else {
+        } else if field == .city {
         
         textField.text = cityItems[cityPickerView.selectedRow(inComponent: 0)].text
             
         registrationData.cityItem = cityItems[cityPickerView.selectedRow(inComponent: 0)].text
+            
+        } else {
+            
+            registrationData.email = textField.text!
+        }
     }
-}
     
     func didSelectItem(at indexPath: IndexPath) {
         
@@ -303,19 +311,6 @@ private extension ViewController {
 
     }
     
-//    func validate() -> validateResult  {
-//
-//        if registrationData.countryItem.isEmpty || registrationData.date.isEmpty || registrationData.cityItem.isEmpty {
-//
-//            return .inValid(LocalizationKeys.Messages.emptyFieldMessage.localized)
-//
-//        } else {
-//
-//            return .valid(LocalizationKeys.Messages.successMessage.localized)
-//
-//        }
-//
-//    }
 }
 
 //MARK: - UITableViewDataSource
@@ -323,6 +318,7 @@ private extension ViewController {
 extension ViewController: UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         return fields.count
     }
     
@@ -339,7 +335,7 @@ extension ViewController: UITableViewDataSource  {
             countryIndexPath = indexPath
         }
         
-        if field == .date || field == .city {
+        if field == .date || field == .city || field == .email {
             
             cell.doneComplitionHandler = { [weak self] textField in
                 

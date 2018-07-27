@@ -8,6 +8,14 @@
 
 import UIKit
 
+enum validateResult {
+    
+    case valid(String)
+    case emptyDate(String)
+    case emptyCountry(String)
+    case emptyCity(String)
+    case emptyEmail(String)
+}
 
 extension UIViewController {
     
@@ -22,6 +30,31 @@ extension UIViewController {
         alert.addAction(action)
         
         self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    func validate(registrationData: RegistrationData) -> validateResult  {
+        
+        if registrationData.date.isEmpty {
+            
+            return .emptyDate(LocalizationKeys.Messages.emptyDateFieldMessage.localized)
+            
+        } else if registrationData.countryItem.isEmpty {
+            
+            return .emptyCountry(LocalizationKeys.Messages.emptyCountryFieldMessage.localized)
+            
+        } else if registrationData.cityItem.isEmpty {
+            
+            return .emptyCity(LocalizationKeys.Messages.emptyCityFieldMessage.localized)
+            
+        } else if registrationData.email.isEmpty {
+            
+            return .emptyEmail(LocalizationKeys.Messages.emptyEmailFieldMessage.localized)
+            
+        } else {
+            
+            return .valid(LocalizationKeys.Messages.successMessage.localized)
+        }
         
     }
     

@@ -9,7 +9,10 @@
 "Buttons.Submit" = "ارسال";
 "Buttons.OK" = "موافق";
 //MARK: Messages
-"Messages.Empty" = "جميع الحقول اجباريه";
+"Messages.EmptyDate" = "حقل التاريخ مطلوب";
+"Messages.EmptyCountry" = "حقل البلد مطلوب";
+"Message.EmptyCity" = "حقل المدينة مطلوب";
+"Message.EmptyEmail" = "حقل البريد الإلكتروني مطلوب";
 "Messages.Success" = "تم ارسال الموقع بنجاح";
 //MARK: Headers
 "Headers.Summary" = "مراجعه";

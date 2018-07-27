@@ -9,7 +9,10 @@
 "Buttons.Submit" = "Submit";
 "Buttons.OK" = "OK";
 //MARK: Messages
-"Messages.Empty" = "All Fields Required";
+"Messages.EmptyDate" = "Date field is required";
+"Messages.EmptyCountry" = "Country field is required";
+"Message.EmptyCity" = "City field is required";
+"Message.EmptyEmail" = "Email field is required";
 "Messages.Success" = "The location has been submitted successfully";
 //MARK: Headers
 "Headers.Summary" = "Summary";
@@ -17,4 +20,6 @@
 //MARK: Titles
 "Titles.Country" = "country";
 "Titles.City" = "city";
+
+
 
