@@ -15,6 +15,7 @@ struct LocalizationKeys {
         static let emptyCountryFieldMessage = "Messages.EmptyCountry"
         static let emptyCityFieldMessage = "Message.EmptyCity"
         static let emptyEmailFieldMessage = "Message.EmptyEmail"
+        static let invlidEmailFieldMessage = "Message.InvalidEmail"
         static let successMessage = "Messages.Success"
     }
     struct Headers {
@@ -26,8 +27,10 @@ struct LocalizationKeys {
         static let okButton = "Buttons.OK"
     }
     struct labels {
+        static let Date = "Titles.Date"
         static let country = "Titles.Country"
         static let city = "Titles.City"
+        static let email = "Titles.Email"
     }
 }
 

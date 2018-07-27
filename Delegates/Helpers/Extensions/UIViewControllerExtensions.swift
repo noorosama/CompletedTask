@@ -15,6 +15,7 @@ enum validateResult {
     case emptyCountry(String)
     case emptyCity(String)
     case emptyEmail(String)
+    case invalidEmail(String)
 }
 
 extension UIViewController {
@@ -51,13 +52,16 @@ extension UIViewController {
             
             return .emptyEmail(LocalizationKeys.Messages.emptyEmailFieldMessage.localized)
             
+        } else if !(registrationData.email.validateEmail(enteredEmail: registrationData.email)) {
+            
+            return .invalidEmail(LocalizationKeys.Messages.invlidEmailFieldMessage.localized)
+            
         } else {
             
             return .valid(LocalizationKeys.Messages.successMessage.localized)
         }
         
     }
-    
     
 }
     

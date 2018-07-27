@@ -17,6 +17,7 @@ class SummaryViewController: UIViewController {
     //MARK: Variables
     var descriptionCountry: String?
     var descriptionCity: String?
+    var summaryRecevedItems: [SummaryItem] = []
     
     //MARK: View LifeCycle
     override func viewDidLoad() {
@@ -61,11 +62,12 @@ extension SummaryViewController: UITableViewDelegate {
 }
 
 //MARK: - UITableViewDataSource
+
 extension SummaryViewController: UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return 2
+        return summaryRecevedItems.count
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
@@ -78,16 +80,10 @@ extension SummaryViewController: UITableViewDataSource  {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.Identifier.summaryCell, for: indexPath) as! SummaryTableViewCell
         
-        if indexPath.row == 0 {
+        let item = summaryRecevedItems[indexPath.row]
            
-            cell.displayLabel(text: LocalizationKeys.labels.country.localized)
-            cell.displayDescription(text: descriptionCountry!)
-            
-        }
-//        } else {
-//            cell.displayLabel(text: LocalizationKeys.labels.city.localized)
-//            cell.displayDescription(text: descriptionCity!)
-//        }
+            cell.displayLabel(text: item.description)
+            cell.displayDescription(text: item.value)
         
         return cell
     }

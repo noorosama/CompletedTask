@@ -145,11 +145,13 @@ class ViewController: UIViewController {
             case .emptyEmail( let emptyEmailMessage):
                 self.showAlert(message: emptyEmailMessage, handler: nil)
                 
+            case .invalidEmail( let invalidEmail):
+                self.showAlert(message: invalidEmail, handler: nil)
+                
             case .valid(let validMessage):
                 self.showAlert(message: validMessage, handler: {
                     self.navigateToSummaryViewController()
                 })
-
             }
         }
         
@@ -245,6 +247,16 @@ private extension ViewController {
         let summaryViewController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardID.summary) as! SummaryViewController
         
         summaryViewController.descriptionCountry = self.registrationData.countryItem
+        
+        let summaryItems = [
+            
+                    SummaryItem(description: LocalizationKeys.labels.Date.localized, value: registrationData.date),
+                    SummaryItem(description: LocalizationKeys.labels.country.localized, value: registrationData.countryItem),
+                    SummaryItem(description: LocalizationKeys.labels.city.localized, value: registrationData.cityItem),
+                    SummaryItem(description: LocalizationKeys.labels.email.localized, value: registrationData.email)
+                  ]
+        
+        summaryViewController.summaryRecevedItems = summaryItems
         
         self.navigationController?.pushViewController(summaryViewController, animated: true)
         

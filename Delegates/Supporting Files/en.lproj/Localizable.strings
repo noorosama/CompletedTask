@@ -8,18 +8,24 @@
 //MARK: Buttons
 "Buttons.Submit" = "Submit";
 "Buttons.OK" = "OK";
+
 //MARK: Messages
 "Messages.EmptyDate" = "Date field is required";
 "Messages.EmptyCountry" = "Country field is required";
 "Message.EmptyCity" = "City field is required";
 "Message.EmptyEmail" = "Email field is required";
+"Message.InvalidEmail" = "Invalid email format";
 "Messages.Success" = "The location has been submitted successfully";
+
 //MARK: Headers
 "Headers.Summary" = "Summary";
 "Headers.Location" = "Location";
+
 //MARK: Titles
-"Titles.Country" = "country";
-"Titles.City" = "city";
+"Titles.Date" = "Date of birth";
+"Titles.Email" = "Email";
+"Titles.Country" = "Country";
+"Titles.City" = "City";
 
 
 
