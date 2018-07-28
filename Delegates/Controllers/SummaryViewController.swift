@@ -23,7 +23,9 @@ class SummaryViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
         summaryTableView.tableFooterView = UIView()
+        
         configurSummaryTableView()
     }
     
@@ -56,6 +58,7 @@ extension SummaryViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
         return 50
     }
     
@@ -69,6 +72,7 @@ extension SummaryViewController: UITableViewDataSource  {
         
         return summaryRecevedItems.count
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         summaryTableView.estimatedRowHeight = 80
@@ -87,8 +91,6 @@ extension SummaryViewController: UITableViewDataSource  {
         
         return cell
     }
-    
-    
     
 }
 

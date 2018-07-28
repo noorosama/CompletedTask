@@ -15,7 +15,7 @@
 "Message.EmptyCity" = "City field is required";
 "Message.EmptyEmail" = "Email field is required";
 "Message.InvalidEmail" = "Invalid email format";
-"Messages.Success" = "The location has been submitted successfully";
+"Messages.Success" = "The registration has been submitted successfully";
 
 //MARK: Headers
 "Headers.Summary" = "Summary";

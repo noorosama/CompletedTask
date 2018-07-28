@@ -2,7 +2,7 @@
   Localizable.strings
   Delegates
 
-  Created by SajaHammad on 7/2/18.
+  Created by Nour Abukhaled on 7/2/18.
   Copyright © 2018 Nour Abukhaled. All rights reserved.
 */
 //MARK: Buttons
@@ -14,7 +14,7 @@
 "Message.EmptyCity" = "حقل المدينة مطلوب";
 "Message.EmptyEmail" = "حقل البريد الإلكتروني مطلوب";
 "Message.InvalidEmail" = "البريد الالكتروني غير صحيح";
-"Messages.Success" = "تم ارسال الموقع بنجاح";
+"Messages.Success" = "تم التسجيل بنجاح";
 //MARK: Headers
 "Headers.Summary" = "مراجعه";
 "Headers.Location" = "الموقع";
